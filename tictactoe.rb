@@ -63,9 +63,9 @@ end
 def won?(board)
   winner = false
   WIN_COMBINATIONS.each do |win_combination|
-    win_index_1, win_index_2, win_index_3 = win_combination
-    # checks if 3 marks at specified indices are the same
-    if board[win_index_1] == board[win_index_2] && board[win_index_2] == board[win_index_3]
+    index1, index2, index3 = win_combination
+    # checks if 3 marks at specified indices are the same as win-condition ones
+    if board[index1] == board[index2] && board[index2] == board[index3]
       winner = true
     end
   end
