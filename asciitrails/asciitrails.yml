@@ -1,0 +1,4 @@
+---
+- !ruby/object:AsciiTrails::Game
+  history:
+  - PAUSE
