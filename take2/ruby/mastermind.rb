@@ -1,25 +1,23 @@
-# GET CODE
-# code = rand(1111..6666)
+# TODO: bulletproof user input from random gibberish
+# TODO: create AI
+# TODO: let computer guess, you make the code
 
-# can work on strings for easy comparison "1234" can be checked
-# with str[0,]1, str[1,2] and so on.
-# although we can operate on arrays of integers too.
+# 4 digits regex /^\d{4}$/
 
-# match 4 digits regex /^d{4}$/
+require "pry"
 
 class Mastermind
-  attr_accessor :decoding_board, :turn
-  PEGS = [1, 2, 3, 4, 5, 6]
-
   def initialize
     @decoding_board = Array.new(10, [".", ".", ".", "."])
-    @code == nil
-    @current_guess = nil
+    @code == []
+    @current_guess = []
+    @hint = []
     @turn = 1
   end
 
   def get_code
-    @code = rand(1111..6666).to_s.scan(/(.)/).flatten
+    @code = []
+    4.times { @code << rand(1..6).to_s }
   end
 
   def display_board
@@ -27,43 +25,70 @@ class Mastermind
   end
 
   def make_guess
+    puts "-" * 22
     puts "You have #{11 - @turn} turns left"
-    puts "Please enter your pegs in XXXX format:"
-    @current_guess = gets.chomp.scan(/(.)/)
+    puts "Please enter your pegs color 1 to 6 in XXXX format:"
+    @current_guess = gets.chomp.scan(/(.)/).flatten
     @turn += 1
     # print @current_guess
   end
 
   def update_board
-    @decoding_board[1 - @turn] = @current_guess.flatten
-  end
-
-  def get_feedback
-    win?
-    give_hint
+    @decoding_board[1 - @turn] = @current_guess
   end
 
   def win?
-    return "LOSE" if turn == 11
+    return "LOSE" if @turn == 11
     win = false
     if @current_guess == @code
-      puts "You have won!"
       win = true
+      puts "!!!!! You win !!!!!"
     end
-
-    return "WIN" # if pegs match the code
+    win
   end
 
   def give_hint
+    # array clones to be modified while iterating original arrays.
+    code_helper = @code.clone
+    guess_helper = @current_guess.clone
+
+    @code.each_with_index do |code_peg, index|
+      if @current_guess[index] == code_peg
+        @hint << "X"
+        # code_helper.delete_at(index)
+        code_helper.delete_at(code_helper.index(code_peg))
+        guess_helper.delete_at(guess_helper.index(code_peg))
+      end
+    end
+
+    guess_helper.each do |peg|
+      if ([peg] & code_helper).empty?
+        next
+      else
+        @hint << "O"
+      end
+    end
+
+    puts "Hint:"
+    pp @hint
+    @hint = []
+  end
+
+  def play
+    get_code
+    until win?
+      display_board
+      make_guess
+      update_board
+      puts "*" * 22
+      give_hint
+    end
+    display_board
+    puts "Code was:"
+    print @code + "\n"
+    puts "--- END ---"
   end
 end
 
-print Mastermind.new.get_code
-puts ""
-Mastermind.new.display_board
-puts ""
-# Mastermind.new.make_guess
 x = Mastermind.new
-x.make_guess
-x.update_board
-x.display_board
+x.play
