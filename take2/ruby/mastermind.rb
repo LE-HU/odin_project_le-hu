@@ -1,10 +1,5 @@
-# TODO: bulletproof user input from random gibberish
 # TODO: create AI
 # TODO: let computer guess, you make the code
-
-# 4 digits regex /^\d{4}$/
-
-require "pry"
 
 class Mastermind
   def initialize
@@ -27,10 +22,13 @@ class Mastermind
   def make_guess
     puts "-" * 22
     puts "You have #{11 - @turn} turns left"
-    puts "Please enter your pegs color 1 to 6 in XXXX format:"
-    @current_guess = gets.chomp.scan(/(.)/).flatten
+    entry = ""
+    until entry.match?(/^[1-6]{4}$/)
+      puts "Please enter your pegs color 1 to 6 in XXXX format:"
+      entry = gets.chomp
+    end
+    @current_guess = entry.scan(/(.)/).flatten
     @turn += 1
-    # print @current_guess
   end
 
   def update_board
@@ -55,7 +53,7 @@ class Mastermind
     @code.each_with_index do |code_peg, index|
       if @current_guess[index] == code_peg
         @hint << "X"
-        # code_helper.delete_at(index)
+
         code_helper.delete_at(code_helper.index(code_peg))
         guess_helper.delete_at(guess_helper.index(code_peg))
       end
@@ -85,8 +83,8 @@ class Mastermind
     end
     display_board
     puts "Code was:"
-    print @code + "\n"
-    puts "--- END ---"
+    print @code
+    puts "\n--- END ---"
   end
 end
 
