@@ -1,7 +1,6 @@
 # bubble sort:)
 
 def bubble(array_to_sort)
-  swaps_this_run = array_to_sort.length # if this goes 0, we finished
 
   for run in (1..array_to_sort.length) # defines number of algorithm runs
     for position in (0...(array_to_sort.length - run)) # defines number of comparisons per run

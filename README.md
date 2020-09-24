@@ -1,2 +1,3 @@
-# odin_project_le-hu
-My Odin Project completion
+# www.theodinproject.com
+
+## Project exercises repository
