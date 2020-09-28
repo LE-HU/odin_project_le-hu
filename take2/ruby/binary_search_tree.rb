@@ -20,15 +20,26 @@ class Tree
   end
 
   def build_tree(arr = @arr)
-    return if arr.size == 1
+    return if arr.size <= 1
 
     mid = arr.size / 2
     root = Node.new(arr[mid])
 
     root.left = build_tree(arr[0...mid])
     root.right = build_tree(arr[mid..-1])
+
     @root = root
     return root
+  end
+
+  def min_value(node)
+    current = node
+
+    until current.left.nil?
+      current = current.left
+    end
+
+    return current
   end
 
   def insert(val, root = @root)
@@ -46,6 +57,32 @@ class Tree
     @root = root
   end
 
+  def delete_node(val, root = @root)
+    return root if root.nil?
+    if val < root.data
+      root.left = delete_node(val, root.left)
+    elsif val > root.data
+      root.right = delete_node(val, root.right)
+    else
+      if root.left.nil?
+        # temp = root.right
+        # root = nil
+        # return temp
+        root = root.right
+        return root
+      elsif root.right.nil?
+        temp = root.left
+        root = nil
+        return temp
+      else
+        temp = min_value(root.right)
+        root.data = temp.data
+        root.right = delete_node(temp.data, root.right)
+      end
+    end
+    root
+  end
+
   def pretty_print(node = @root, prefix = "", is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? "│   " : "    "}", false) if node.right
     puts "#{prefix}#{is_left ? "└── " : "┌── "}#{node.data}"
@@ -56,4 +93,16 @@ end
 x = Tree.new(arr)
 x.build_tree
 x.insert(20)
+# x.insert(9)
 x.pretty_print
+
+# puts "*************"
+
+# x.delete_node(10)
+# x.delete_node(3)
+# x.pretty_print
+
+# y = Tree.new(Array.new)
+# y.build_tree
+# y.insert(5)
+# y.pretty_print
