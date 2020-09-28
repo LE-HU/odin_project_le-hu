@@ -43,6 +43,27 @@ class Tree
     end
   end
 
+  def node_height(node, root = @root)
+    return 0 if node.nil?
+
+    left_side = node_height(node.left)
+    right_side = node_height(node.right)
+
+    left_side > right_side ? left_side + 1 : right_side + 1
+  end
+
+  def node_depth(node, root = @root, depth = 1)
+    if root == nil || root.data == node.data
+      return depth
+    elsif root.data < node.data
+      depth += 1
+      node_depth(node, root.right, depth)
+    else
+      depth += 1
+      node_depth(node, root.left, depth)
+    end
+  end
+
   def min_value(node)
     current = node
 
@@ -76,15 +97,11 @@ class Tree
       root.right = delete_node(val, root.right)
     else
       if root.left.nil?
-        # temp = root.right
-        # root = nil
-        # return temp
         root = root.right
         return root
       elsif root.right.nil?
-        temp = root.left
-        root = nil
-        return temp
+        root = root.left
+        return root
       else
         temp = min_value(root.right)
         root.data = temp.data
@@ -99,6 +116,20 @@ class Tree
     inorder_traversal(root.left)
     print "#{root.data}, "
     inorder_traversal(root.right)
+  end
+
+  def preorder_traversal(root = @root)
+    return if root.nil?
+    print "#{root.data}, "
+    preorder_traversal(root.left)
+    preorder_traversal(root.right)
+  end
+
+  def postorder_traversal(root = @root)
+    return if root.nil?
+    postorder_traversal(root.left)
+    postorder_traversal(root.right)
+    print "#{root.data}, "
   end
 
   def breadth_traversal(root = @root)
@@ -128,7 +159,19 @@ x.insert(20)
 # pp x.find(25)
 x.pretty_print
 x.breadth_traversal
+# x.preorder_traversal
+# puts "***"
+# x.postorder_traversal
 # x.inorder_traversal
+# puts "***"
+# print x.node_height(x.find(20))
+# puts ""
+# puts "***"
+# print x.node_depth(x.find(20))
+# puts ""
+# puts "***"
+# print x.node_depth(x.find(9))
+# puts ""
 
 # puts "*************"
 
