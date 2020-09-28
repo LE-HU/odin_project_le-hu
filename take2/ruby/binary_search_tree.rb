@@ -32,6 +32,17 @@ class Tree
     return root
   end
 
+  def find(val, root = @root)
+    return "No such value" if root.nil?
+    if val == root.data
+      return root
+    elsif val > root.data
+      find(val, root.right)
+    else
+      find(val, root.left)
+    end
+  end
+
   def min_value(node)
     current = node
 
@@ -83,6 +94,25 @@ class Tree
     root
   end
 
+  def inorder_traversal(root = @root)
+    return if root.nil?
+    inorder_traversal(root.left)
+    print "#{root.data}, "
+    inorder_traversal(root.right)
+  end
+
+  def breadth_traversal(root = @root)
+    return if root.nil?
+    q = []
+    q << root
+    until q.empty?
+      current = q.shift
+      print "#{current.data}, "
+      q << current.left unless current.left.nil?
+      q << current.right unless current.right.nil?
+    end
+  end
+
   def pretty_print(node = @root, prefix = "", is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? "│   " : "    "}", false) if node.right
     puts "#{prefix}#{is_left ? "└── " : "┌── "}#{node.data}"
@@ -94,7 +124,11 @@ x = Tree.new(arr)
 x.build_tree
 x.insert(20)
 # x.insert(9)
+# pp x.find(10)
+# pp x.find(25)
 x.pretty_print
+x.breadth_traversal
+# x.inorder_traversal
 
 # puts "*************"
 
