@@ -1,6 +1,6 @@
 # BST
-# arr = Array.new(21).map { |x| x = rand(100) }.uniq.sort
-arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+arr = Array.new(21).map { |x| x = rand(100) }.uniq.sort
+# arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 class Node
   attr_accessor :data, :left, :right
@@ -136,12 +136,31 @@ class Tree
     return if root.nil?
     q = []
     q << root
+    result = []
     until q.empty?
       current = q.shift
       print "#{current.data}, "
+      result << current.data
       q << current.left unless current.left.nil?
       q << current.right unless current.right.nil?
     end
+    result
+  end
+
+  def balanced?(node = @root)
+    return 0 if node.nil?
+
+    left_side = node_height(node.left)
+    right_side = node_height(node.right)
+
+    difference = left_side - right_side
+    puts (difference.abs < 2)
+    difference.abs < 2
+  end
+
+  def rebalance
+    leveled_array = breadth_traversal
+    @root = build_tree(leveled_array)
   end
 
   def pretty_print(node = @root, prefix = "", is_left = true)
@@ -151,35 +170,37 @@ class Tree
   end
 end
 
+# 1. Create a binary search tree from an array of random numbers (`Array.new(15) { rand(1..100) }`)
 x = Tree.new(arr)
 x.build_tree
-x.insert(20)
-# x.insert(9)
-# pp x.find(10)
-# pp x.find(25)
-x.pretty_print
+puts "Tree built."
+# 2. Confirm that the tree is balanced by calling `#balanced?`
+puts "Is balanced?"
+x.balanced?
+# 3. Print out all elements in level, pre, post, and in order
+puts "Level, pre-, post-, in-order traversal output:"
 x.breadth_traversal
-# x.preorder_traversal
-# puts "***"
-# x.postorder_traversal
-# x.inorder_traversal
-# puts "***"
-# print x.node_height(x.find(20))
-# puts ""
-# puts "***"
-# print x.node_depth(x.find(20))
-# puts ""
-# puts "***"
-# print x.node_depth(x.find(9))
-# puts ""
-
-# puts "*************"
-
-# x.delete_node(10)
-# x.delete_node(3)
-# x.pretty_print
-
-# y = Tree.new(Array.new)
-# y.build_tree
-# y.insert(5)
-# y.pretty_print
+puts ""
+x.preorder_traversal
+puts ""
+x.postorder_traversal
+puts ""
+x.inorder_traversal
+puts ""
+# 4. try to unbalance the tree by adding several numbers > 100
+puts "Inserting 101,102,103"
+x.insert(101)
+x.insert(102)
+x.insert(103)
+# 5. Confirm that the tree is unbalanced by calling `#balanced?`
+puts "Is balanced?"
+x.balanced?
+# 6. Balance the tree by calling `#rebalance`
+puts "Calling #rebalance"
+x.rebalance
+puts ""
+# 7. Confirm that the tree is balanced by calling `#balanced?`
+puts "Is balanced?"
+x.balanced?
+# 8. Print out all elements in level, pre, post, and in order
+x.pretty_print
