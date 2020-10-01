@@ -51,7 +51,7 @@ class TicTacToe
 
   def player1_move(mark = "X")
     spot = ""
-    until spot.match?(/[0-9]/) && @board[spot.to_i] == "."
+    until spot.match?(/[0-8]/) && @board[spot.to_i] == "."
       puts "Player X turn - please pick a free spot:"
       spot = gets.chomp
     end
@@ -61,7 +61,7 @@ class TicTacToe
 
   def player2_move(mark = "O")
     spot = ""
-    until spot.match?(/[0-9]/) && @board[spot.to_i] == "."
+    until spot.match?(/[0-8]/) && @board[spot.to_i] == "."
       puts "Player O turn - please pick a free spot:"
       spot = gets.chomp
     end
@@ -82,4 +82,4 @@ class TicTacToe
 end
 
 # commented out for testing purposes to not init gameplay via tests :)
-TicTacToe.new.play
+# TicTacToe.new.play
